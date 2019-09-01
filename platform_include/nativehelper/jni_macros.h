@@ -256,7 +256,7 @@
   )
 
 // C++14 or better, use compile-time checking.
-#if defined(__cplusplus) && __cplusplus >= 201402L
+#if defined(__cplusplus) && __cplusplus >= 201402L && !defined(__GNUG__)
 // Expands to a compound expression whose type is JNINativeMethod.
 #define _NATIVEHELPER_JNI_MAKE_METHOD(kind, name, sig, fn) \
   MAKE_CHECKED_JNI_NATIVE_METHOD(kind, name, sig, fn)

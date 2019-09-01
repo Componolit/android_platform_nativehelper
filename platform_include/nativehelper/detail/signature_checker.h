@@ -938,6 +938,7 @@ struct is_valid_jni_argument_type<native_kind, position, T, Args...> {
 template<NativeKind native_kind, typename T, T fn>
 struct is_valid_jni_function_type_helper;
 
+#ifndef __GNUG__
 template<NativeKind native_kind, typename R, typename ... Args, R fn(Args...)>
 struct is_valid_jni_function_type_helper<native_kind, R(Args...), fn> {
   static constexpr bool value =
@@ -947,6 +948,7 @@ struct is_valid_jni_function_type_helper<native_kind, R(Args...), fn> {
                                         0,
                                         Args...>::value;
 };
+#endif
 
 // Is this function type 'T' a valid C++ function type given the native_kind?
 template<NativeKind native_kind, typename T, T fn>
@@ -1025,6 +1027,7 @@ struct FunctionTypeMetafunction {
 };
 
 // Enables the "map" operation over the function component types.
+#ifndef __GNUG__
 template<typename R, typename ... Args, R fn(Args...)>
 struct FunctionTypeMetafunction<R(Args...), fn> {
   // Count how many arguments there are, and add 1 for the return type.
@@ -1067,6 +1070,7 @@ struct FunctionTypeMetafunction<R(Args...), fn> {
     return ConstexprArray<ComponentType, /*size*/0u>{};
   }
 };
+#endif
 
 // Apply ReifiedJniTypeTrait::Reify<T> for every function component type.
 template<typename T>
