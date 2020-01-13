@@ -28,6 +28,7 @@
 #ifdef __ANDROID__
 #include <sys/system_properties.h>
 #endif
+#include <gart/env.h>
 
 template <typename T>
 void UNUSED(const T&) {}
@@ -161,6 +162,16 @@ bool JniInvocation::Init(const char* library) {
                   "JNI_GetCreatedJavaVMs")) {
     return false;
   }
+
+#ifdef __GENODE__
+  void (*ige)(Genode::Env *) = nullptr;
+  if (!FindSymbol(reinterpret_cast<void **>(&ige), "init_genode_env")) {
+    fprintf(stderr, "Failed to find init_genode_env symbol in %s\n", library);
+    return false;
+  }
+  (*ige)(gart::genode_env_ptr());
+#endif
+
   return true;
 }
 
